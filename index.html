@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-bt">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>PWA - ConsultaCEP por Fziliotti</title>
+	<meta name="description" content="App para consultar cep">
+	<!-- Add to homescreen for Chrome on Android -->
+	<meta name="mobile-web-app-capable" content="yes">
+	<link rel="icon" sizes="192x192" href="imgs/launcher-icon-4x.png">
+	<meta name="theme-color" content="#0f1419">
+	 <link rel="manifest" href="manifest.json">
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="imgs/favicon.ico" type="image/x-icon" />
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="bg-dark text-light">
+	<div class="jumbotron bg-secondary text-center">
+		<div class="container">
+			<h1 class="display-4">CONSULTAR O CEP</h1>
+			<p class="lead">Esse é um simples projeto para estudar PWA's utilizando as tecnologias HTML5, CSS3 e Javascript!</p>
+		</div>
+
+	</div>
+
+	<div class="container">
+
+		<label for="cep">Código de Endereçamento Postal:</label>
+		<form id="form-cep" action="#" onsubmit="searchCep()" class="form form-inline">
+
+			<input type="text" name="cep" id="cep" placeholder="Informe o cep" class="form-control">
+			<button type="submit" class="btn btn-info">Buscar</button>
+		</form>
+
+		<div id="error" style="display: none;" class="alert alert-danger"></div>
+
+		<div id="preloader" style="display: none;" class="alert alert-info">
+			Carregando...
+		</div>
+
+		<div id="results" class="pt-4" style="display: none;"></div>
+	</div><!--Container-->
+
+
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+		function searchCep () {
+				// Inicia o preloader
+				startPreloader();
+
+				// Recupera o value do input cep
+				let cep = document.getElementById('cep').value;
+
+				// Inicia requisição AJAX com o axios
+				axios.get(`http://api.postmon.com.br/v1/cep/${cep}`)
+				.then(response => {
+					showResults (response.data);
+				})
+				.catch(error => {
+					document.getElementById('error').style.display = 'block';
+					document.getElementById('error').innerHTML = 'Erro inesperado';
+				})
+				.finally(() => endPreloader ())
+
+				event.preventDefault();
+			}
+
+			function showResults (address) {
+				document.getElementById('results').style.display = 'block';
+				document.getElementById('results').innerHTML = `
+				<p><b>Bairro: </b> ${address.bairro} </p>
+				<p><b>Cidade: </b> ${address.cidade} </p>
+				<p><b>Logradouro: </b> ${address.logradouro} </p>
+				<p><b>Cep: </b> ${address.cep} </p>
+				`;
+			}
+
+			function startPreloader () {
+				document.getElementById('preloader').style.display = 'block';
+				document.getElementById('results').innerHTML = '';
+				document.getElementById('results').style.display = 'none';
+				document.getElementById('error').style.display = 'none';
+			}
+
+			function endPreloader () {
+				document.getElementById('preloader').style.display = 'none';
+			}
+		</script>
+	</body>
+	</html>
