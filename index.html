@@ -53,7 +53,7 @@
 				let cep = document.getElementById('cep').value;
 
 				// Inicia requisição AJAX com o axios
-				axios.get("http://api.postmon.com.br/v1/cep/" + cep )
+				axios.get("https://api.postmon.com.br/v1/cep/" + cep )
 				.then(response => {
 					showResults (response.data);
 				})
